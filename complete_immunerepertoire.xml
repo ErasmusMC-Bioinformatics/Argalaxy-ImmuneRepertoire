@@ -1,0 +1,187 @@
+<tool id="complete_immunerepertoire_igg" name="Immune Repertoire pipeline" version="1.0">
+	<description> </description>
+	<command interpreter="bash">
+complete.sh "
+#for $i, $f in enumerate($patients)
+	"${f.id}"
+	#for $j, $g in enumerate($f.samples)
+		${g.sample}
+	#end for
+#end for
+" $out_file $out_file.files_path "$clonaltype"
+#if $gene_selection.source == "imgtdb"		
+	"${gene_selection.species}" "${gene_selection.locus}" $filterproductive ${clonality_method}
+#else
+	"custom" "${gene_selection.vgenes};${gene_selection.dgenes};${gene_selection.jgenes}" $filterproductive $clonality_method
+#end if
+	</command>
+	<inputs>
+		<repeat name="patients" title="Donor" min="1" default="1">
+			<repeat name="samples" title="Replicate" min="1" default="1">
+					<param name="sample" type="data" label="Replicate to Process" />
+			</repeat>
+			<param name="id" type="text" label="ID" />
+		</repeat>
+		<param name="clonaltype" type="select" label="Clonal Type Definition">
+			<option value="none">Don't remove duplicates based on clonaltype</option>
+			<option value="Top.V.Gene,CDR3.Seq">Top.V.Gene, CDR3 (AA)</option>
+			<option value="Top.V.Gene,CDR3.Seq.DNA">Top.V.Gene, CDR3 (nt)</option>
+			<option value="Top.V.Gene,Top.J.Gene,CDR3.Seq">Top.V.Gene, Top.J.Gene, CDR3 (AA)</option>
+			<option value="Top.V.Gene,Top.J.Gene,CDR3.Seq.DNA">Top.V.Gene, Top.J.Gene, CDR3 (nt)</option>
+			<option value="Top.V.Gene,Top.D.Gene,Top.J.Gene,CDR3.Seq.DNA">Top.V.Gene, Top.D.Gene, Top.J.Gene, CDR3 (nt)</option>
+		</param>
+		
+		<conditional name="gene_selection" >
+			<param name="source" type="select" label="Order of V(D)J genes in graphs" help="" >
+					<option value="imgtdb" selected="true">IMGT-DB</option>
+					<option value="custom">User defined</option>
+			</param>
+			<when value="imgtdb">
+				<param name="species" type="select" label="Species">
+					<option value="Homo sapiens functional">Homo sapiens functional</option>
+					<option value="Homo sapiens">Homo sapiens</option>
+					<option value="Homo sapiens non-functional">Homo sapiens non-functional</option>
+					<option value="Bos taurus">Bos taurus</option>
+					<option value="Bos taurus functional">Bos taurus functional</option>
+					<option value="Bos taurus non-functional">Bos taurus non-functional</option>
+					<option value="Camelus dromedarius">Camelus dromedarius</option>
+					<option value="Camelus dromedarius functional">Camelus dromedarius functional</option>
+					<option value="Camelus dromedarius non-functional">Camelus dromedarius non-functional</option>
+					<option value="Canis lupus familiaris">Canis lupus familiaris</option>
+					<option value="Canis lupus familiaris functional">Canis lupus familiaris functional</option>
+					<option value="Canis lupus familiaris non-functional">Canis lupus familiaris non-functional</option>
+					<option value="Danio rerio">Danio rerio</option>
+					<option value="Danio rerio functional">Danio rerio functional</option>
+					<option value="Danio rerio non-functional">Danio rerio non-functional</option>
+					<option value="Macaca mulatta">Macaca mulatta</option>
+					<option value="Macaca mulatta functional">Macaca mulatta functional</option>
+					<option value="Macaca mulatta non-functional">Macaca mulatta non-functional</option>
+					<option value="Mus musculus">Mus musculus</option>
+					<option value="Mus musculus functional">Mus musculus functional</option>
+					<option value="Mus musculus non-functional">Mus musculus non-functional</option>
+					<option value="Mus spretus">Mus spretus</option>
+					<option value="Mus spretus functional">Mus spretus functional</option>
+					<option value="Mus spretus non-functional">Mus spretus non-functional</option>
+					<option value="Oncorhynchus mykiss">Oncorhynchus mykiss</option>
+					<option value="Oncorhynchus mykiss functional">Oncorhynchus mykiss functional</option>
+					<option value="Oncorhynchus mykiss non-functional">Oncorhynchus mykiss non-functional</option>
+					<option value="Ornithorhynchus anatinus">Ornithorhynchus anatinus</option>
+					<option value="Ornithorhynchus anatinus functional">Ornithorhynchus anatinus functional</option>
+					<option value="Ornithorhynchus anatinus non-functional">Ornithorhynchus anatinus non-functional</option>
+					<option value="Oryctolagus cuniculus">Oryctolagus cuniculus</option>
+					<option value="Oryctolagus cuniculus functional">Oryctolagus cuniculus functional</option>
+					<option value="Oryctolagus cuniculus non-functional">Oryctolagus cuniculus non-functional</option>
+					<option value="Rattus norvegicus">Rattus norvegicus</option>
+					<option value="Rattus norvegicus functional">Rattus norvegicus functional</option>
+					<option value="Rattus norvegicus non-functional">Rattus norvegicus non-functional</option>
+					<option value="Sus scrofa">Sus scrofa</option>
+					<option value="Sus scrofa functional">Sus scrofa functional</option>
+					<option value="Sus scrofa non-functional">Sus scrofa non-functional</option>
+				</param>
+			
+				<param name="locus" type="select" label="Locus">
+					<option value="TRA">TRA</option>
+					<option value="TRD">TRD</option>
+					<option value="TRG">TRG</option>
+					<option value="TRB">TRB</option>
+					<option value="IGH">IGH</option>
+					<option value="IGI">IGI</option>
+					<option value="IGK">IGK</option>
+					<option value="IGL">IGL</option>
+				</param>
+			</when>
+			<when value="custom">
+				<param name="species" type="hidden" value="custom" size="50" />
+				<param name="vgenes" type="text" label="V Genes, add the custom genes comma seperated, no spaces" size="100" />
+				<param name="dgenes" type="text" label="D Genes" size="100" />
+				<param name="jgenes" type="text" label="J Genes" size="100" />
+			</when>
+		</conditional>
+		
+		<param name="filterproductive" type="select" label="Remove the unproductive sequences from graphs ">
+			<option value="yes">Yes</option>
+			<option value="no">No</option>
+		</param>
+		
+		<param name="clonality_method" type="select" label="Shared clonal types / clonality">
+			<option value="none">Do not determine overlap (only 1 replicate present)</option>
+			<option value="old">Determine the number of sequences that share the same clonal type between the replicates</option>
+			<option value="boyd">Determine the clonality of the donor (minimal 3 replicates)</option>
+		</param>
+	</inputs>
+	<outputs>
+		<data format="html" name="out_file" />
+	</outputs>
+	<requirements>
+		<requirement type="package" version="0.6">igblastwrp</requirement>
+		<requirement type="package" version="3.3">weblogo</requirement>
+		<!--<requirement type="package" version="0.20">circostools</requirement>-->
+	</requirements>
+	<help>
+<![CDATA[
+**References**
+
+Boyd SD, Marshall EL, Merker JD, Maniar JM, Zhang LN, Sahaf B, Jones CD, Simen BB, Hanczaruk B, Nguyen KD, Nadeau KC, Egholm M, Miklos DB, Zehnder JL, Fire AZ (2009). Measurement and clinical monitoring of human lymphocyte clonality by massively parallel VDJ pyrosequencing. In *Science Translational Medicine 1(12):12ra23*. 
+
+-----
+
+**Input files**
+
+IMGT/HighV-QUEST .zip and .txz files and FASTA files are accepted as input files. In addition filtered IMGT files generated using the SHM &amp; CSR pipeline can be used as input files. 
+Note: Files can be uploaded by using “get data” and “upload file”. When uploading IMGT files  “IMGT archive“ should be selected as a file type. When uploading FASTA files the auto-detect function can be used to select a file type. Special characters should be prevented in the file names of the uploaded replicates as these can give errors when running the immune repertoire pipeline. Underscores are allowed in the file names.
+
+-----
+
+**Donor and replicates**
+
+The immune repertoire pipeline can analyse files from multiple donors in parallel. Therefore for each analysed donor an ID has to be given. This ID can only contain letters, numbers and _. Spaces in the ID give an error when running the immune repertoire pipeline. In the default setting of the immune repertoire pipeline one donor consisting out of one replicate can be uploaded. However, multiple replicates per donor can be uploaded by using the "Add new replicate" button. In addition, multiple donors van be added by using the insert donor button. The multiple replicate option can be used when multiple data files from the same donor are available. For the calculation of the clonality score using the algorithm described by Boyd et al (PMID: 20161664) at least 3 replicates have to be included per donor. 
+
+-----
+
+**Clonal Type Definition**
+
+Allows the selection of a single sequence per clone. Different definitions of a clone can be chosen. 
+
+.. class:: infomark
+
+Note: The first sequence (in the data set) of each clone is always included in the analysis. This means that altering the data order (by for instance sorting) can change the sequence which is included in the analysis and therefore slightly influence results. 
+
+-----
+
+**Order of V(D)J genes in graphs**
+
+This setting allows you to order the V(D)J genes in the graphs in a user defined order. When using the default “IMGT-DB” all genes in the V, D an J gene graphs will be ordered based on their IMGT numbering. By selecting user defined the order of the V, D and J genes in the graphs can be altered according to the users personal settings. For simplifying of visualizing the genes in the chromosomal order the order of V, D and J genes on the chromosome in are included at the bottom of this help page. For any other ordering please provide the order of gene names divided by commas. 
+
+-----
+
+**Species**
+
+Enter the species of the replicates(s) you would like to analyse.
+
+-----
+
+**Locus**
+
+A dropdown menu to select the immune receptor locus to be analysed.
+
+-----
+
+**Remove unproductive sequences from graphs**
+
+This filter provides the option to only include productive sequences or both productive and unproductive sequences in the graphs.
+
+-----
+
+**Shared clonal types / clonality**
+
+This filter allows you do identify overlapping sequences between different replicates. If you only upload a single replicate from a replicate no sequences overlap or clonality can be determined and therefore the “do not determine overlap” option should be selection. The “Determine the number of sequences that share the same clonal type between the replicates” option allows the user to determine the number of overlapping sequences (based on the clonal type definition defined in the ‘clonal type definition filter’) between different replicates. This can be used to for instance look at different time point in the same donor to changes in the repertoire. When three or more replicates of the same blood same are amplified and sequences in parallel, the “determine clonality of the donor” function can be used to calculate the number of overlapping sequences as well as the clonality score as described by Boyd et al, PMID: 20161664.
+
+-----
+
+**Execute**
+
+Upon pressing the execute button a new analysis is added to your history (right side of the page). Initially this analysis will be grey, after initiating the analysis colour of the analysis in the history will change to yellow. When the analysis is finished it will turn green in the history. Now the analysis can be opened by clicking on the eye icon on the analysis of interest. When an analysis turns red an error has occurred when running the analysis. If you click on the analysis title additional information can be found on the analysis. In addition a bug icon appears. Here more information on the error can be found.
+]]>
+	</help>
+
+</tool>

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<tool_dependency>
+    <package name="igblastwrp" version="0.6">
+        <install version="1.0">
+            <actions>
+                <action type="download_by_url">https://github.com/mikessh/higblast/releases/download/v0.6/igblastwrapper_linux64.tar.gz</action>
+                <action type="move_file">
+                    <source>bin</source>
+                    <destination>$INSTALL_DIR/</destination>
+                </action>
+                <action type="move_file">
+                    <source>data</source>
+                    <destination>$INSTALL_DIR/</destination>
+                </action>
+                <action type="move_file">
+                    <source>igblastwrp.jar</source>
+                    <destination>$INSTALL_DIR/</destination>
+                </action>
+                <action type="set_environment">
+                    <environment_variable action="set_to" name="IGBLASTWRP">$INSTALL_DIR/</environment_variable>
+                </action>
+            </actions>
+        </install>
+        <readme>
+Downloads https://github.com/mikessh/higblast/
+        </readme>
+    </package>
+    <package name="weblogo" version="3.3">
+      <repository changeset_revision="648e4b32f15c" name="package_weblogo_3_3" owner="devteam" toolshed="https://toolshed.g2.bx.psu.edu" />
+    </package>
+    <!--
+    <package name="circostools" version="0.20">
+      <repository name="package_circostools_0_20" owner="iuc" />
+    </package>
+    -->
+</tool_dependency>
