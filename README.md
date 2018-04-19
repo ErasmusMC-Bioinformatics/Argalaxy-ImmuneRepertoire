@@ -12,7 +12,7 @@ In execution order:
 Start the analysis with [IMGT HighV Quest](https://www.imgt.org/HighV-QUEST/) archives.  
 An IMGT archive file holds [multiple tabular files](http://www.imgt.org/IMGT_vquest/share/textes/imgtvquest.html#output3), this script extracts the specific columns relevant to the analysis from several of these files.
 
-`Rscript imgt_loader.r 1_Summary.txt 3_Nt-sequences.txt 4_IMGT-gapped-AA-sequences.txt 6_Junction.txt 4_IMGT-gapped-AA-sequences.txt /path/to/output.txt`
+`Rscript imgt_loader.r 1_Summary.txt 3_Nt-sequences.txt 5_AA-sequences.txt 6_Junction.txt 4_IMGT-gapped-AA-sequences.txt /path/to/output.txt`
 
 
 ###### igblast
