@@ -33,6 +33,16 @@ fix_column_names = function(df){
     return(df)
 }
 
+print_missing_columns = function(df, cols, label=""){
+	cols_in_df = cols %in% names(df)
+	if(sum(!cols_in_df) > 0){
+		print("Columns are missing from summary file, don't have:")
+		print(cols[!cols_in_df])
+	} else {
+		print(paste("No missing columns for", label))
+	}
+}
+
 summ = fix_column_names(summ)
 sequences = fix_column_names(sequences)
 aa = fix_column_names(aa)
@@ -51,7 +61,9 @@ added_sequence_columns=c('FR1.IMGT','FR2.IMGT','FR3.IMGT','CDR3.IMGT','JUNCTION'
 added_junction_columns=c('P3.V.nt.nb','N.REGION.nt.nb','N1.REGION.nt.nb','P5.D.nt.nb','P3.D.nt.nb','N2.REGION.nt.nb','P5.J.nt.nb','X3.V.REGION.trimmed.nt.nb','X5.D.REGION.trimmed.nt.nb','X3.D.REGION.trimmed.nt.nb','X5.J.REGION.trimmed.nt.nb','N.REGION','N1.REGION','N2.REGION')
 added_junction_columns=c(added_junction_columns, 'P5.D1.nt.nb', 'P3.D1.nt.nb', 'N2.REGION.nt.nb', 'P5.D2.nt.nb', 'P3.D2.nt.nb', 'N3.REGION.nt.nb', 'P5.D3.nt.nb', 'P3.D2.nt.nb', 'N4.REGION.nt.nb', 'X5.D1.REGION.trimmed.nt.nb', 'X3.D1.REGION.trimmed.nt.nb', 'X5.D2.REGION.trimmed.nt.nb', 'X3.D2.REGION.trimmed.nt.nb', 'X5.D3.REGION.trimmed.nt.nb', 'X3.D3.REGION.trimmed.nt.nb', 'D.REGION.nt.nb', 'D1.REGION.nt.nb', 'D2.REGION.nt.nb', 'D3.REGION.nt.nb')
 
-out=summ[,c("Sequence.ID","JUNCTION.frame","V.GENE.and.allele","D.GENE.and.allele","J.GENE.and.allele")]
+minimum_columns=c("Sequence.ID","JUNCTION.frame","V.GENE.and.allele","D.GENE.and.allele","J.GENE.and.allele")
+print_missing_columns(summ, minimum_columns)
+out=summ[,minimum_columns]
 
 print(paste("nrow(summ)", nrow(summ)))
 print(paste("nrow(aa)", nrow(aa)))
