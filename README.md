@@ -1,6 +1,7 @@
 # ARGalaxy Immune Repertoire
 This is the GitHub repository for the ARGalaxy Immune repertoire pipeline.  
-The Galaxy tool version can be found [here](https://toolshed.g2.bx.psu.edu/repository/browse_repositories_i_own?sort=name&operation=view_or_manage_repository&id=2e457d63170a4b1c).
+The Galaxy tool version can be found [here](https://toolshed.g2.bx.psu.edu/repository/browse_repositories_i_own?sort=name&operation=view_or_manage_repository&id=2e457d63170a4b1c).  
+The docker version can be found [here](https://github.com/ErasmusMC-Bioinformatics/ARGalaxy-docker).
 
 ## Overview
 
