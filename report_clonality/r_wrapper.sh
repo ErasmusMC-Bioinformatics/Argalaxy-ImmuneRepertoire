@@ -59,34 +59,12 @@ echo "</center></html>" >> $2
 echo "<html><head><title>Report on:" >> $outputFile
 
 mkdir $outputDir/circos
-cp $dir/circos/* $outputDir/circos/
-#CIRCOSTOOLS="/data/galaxy/galaxy-dist/toolsheddependencies/circos/0.64/saskia-hiltemann/cg_circos_plots/bbfdd52d64fd/circos-tools-0.21/tools"
-#CIRCOSDIR="/data/galaxy/galaxy-dist/toolsheddependencies/circos/0.64/saskia-hiltemann/cg_circos_plots/bbfdd52d64fd/bin/"
-
-#CIRCOSTOOLS="/home/galaxy/circos/circos-tools-0.22/tools"
-#CIRCOSDIR="/home/galaxy/Anaconda3/bin"
+cp -R $dir/circos/* $outputDir/circos/
 
 USECIRCOS="no"
-if [ -d "$CIRCOSDIR" ]; then
+path_to_circos=$(which circos)
+if [ -x "$path_to_circos" ]; then
 	USECIRCOS="yes"
-else
-	if [ -d "/data/galaxy/galaxy-dist/toolsheddependencies/circos/0.64/saskia-hiltemann/cg_circos_plots/bbfdd52d64fd/bin/" ]; then #hopefully temporary fix
-		USECIRCOS="yes"
-		CIRCOSTOOLS="/data/galaxy/galaxy-dist/toolsheddependencies/circos/0.64/saskia-hiltemann/cg_circos_plots/bbfdd52d64fd/circos-tools-0.21/tools"
-		CIRCOSDIR="/data/galaxy/galaxy-dist/toolsheddependencies/circos/0.64/saskia-hiltemann/cg_circos_plots/bbfdd52d64fd/bin/"
-	fi
-	
-	if [ -d "/home/galaxy/Anaconda3/bin" ]; then #hopefully temporary fix #or not
-		USECIRCOS="yes"
-		CIRCOSTOOLS="/home/galaxy/circos/circos-tools-0.22/tools"
-		CIRCOSDIR="/home/galaxy/Anaconda3/bin"
-	fi
-
-	if [ -d "/media/galaxy/data/other_backup/circos/galaxian-circos//bin" ]; then #hopefully temporary fix #or not #really not
-		USECIRCOS="yes"
-		CIRCOSTOOLS="/media/galaxy/data/other_backup/circos/galaxian-circos/tools"
-		CIRCOSDIR="/media/galaxy/data/other_backup/circos/galaxian-circos/bin"
-	fi
 fi
 
 echo "Using Circos: $USECIRCOS"
@@ -102,12 +80,12 @@ for sample in $samples; do #output the samples to a file and create the circos p
 	sed -i -- 's%/%:%g' $circos_file
 	echo -e -n "labels$(cat ${circos_file})" > ${circos_file}
 	echo "Circos tools command:"
-	echo "cat \"${circos_file}\" | $CIRCOSTOOLS/tableviewer/bin/parse-table -configfile $dir/circos/parse-table.conf 2>&1 | $CIRCOSTOOLS/tableviewer/bin/make-conf -dir $outputDir/circos/"
-	cat "${circos_file}" | $CIRCOSTOOLS/tableviewer/bin/parse-table -configfile $dir/circos/parse-table.conf 2>&1 | $CIRCOSTOOLS/tableviewer/bin/make-conf -dir $outputDir/circos/
+	echo "cat \"${circos_file}\" | parse-table -configfile $dir/circos/parse-table.conf 2>&1 | make-conf -dir $outputDir/circos/"
+	cat "${circos_file}" | parse-table -configfile $dir/circos/parse-table.conf 2>&1 | make-conf -dir $outputDir/circos/
 
 	echo "Circos command:"
-	echo "$CIRCOSDIR/circos -conf $outputDir/circos/circos.conf 2>&1"
-	$CIRCOSDIR/circos -conf $outputDir/circos/circos.conf 2>&1
+	echo "circos -conf $outputDir/circos/circos.conf 2>&1"
+	circos -conf $outputDir/circos/circos.conf 2>&1
 	mv $outputDir/circos/circos.png $outputDir/circosVJ_${sample}.png
 	mv $outputDir/circos/circos.svg $outputDir/circosVJ_${sample}.svg
 	
@@ -116,18 +94,18 @@ for sample in $samples; do #output the samples to a file and create the circos p
 		circos_file="$outputDir/${sample}_VD_circos.txt"
 		sed -i -- 's%/%:%g' $circos_file
 		echo -e -n "labels$(cat ${circos_file})" > ${circos_file}
-		cat "${circos_file}" | $CIRCOSTOOLS/tableviewer/bin/parse-table -configfile $dir/circos/parse-table.conf 2>&1 | $CIRCOSTOOLS/tableviewer/bin/make-conf -dir $outputDir/circos/
+		cat "${circos_file}" | parse-table -configfile $dir/circos/parse-table.conf 2>&1 | make-conf -dir $outputDir/circos/
 		sed -i -- 's%/%:%g' $outputDir/circos/cells.txt
-		$CIRCOSDIR/circos -conf $outputDir/circos/circos.conf 2>&1
+		circos -conf $outputDir/circos/circos.conf 2>&1
 		mv $outputDir/circos/circos.png $outputDir/circosVD_${sample}.png
 		mv $outputDir/circos/circos.svg $outputDir/circosVD_${sample}.svg
 		
 		circos_file="$outputDir/${sample}_DJ_circos.txt"
 		sed -i -- 's%/%:%g' $circos_file
 		echo -e -n "labels$(cat ${circos_file})" > ${circos_file}
-		cat "${circos_file}" | $CIRCOSTOOLS/tableviewer/bin/parse-table -configfile $dir/circos/parse-table.conf 2>&1 | $CIRCOSTOOLS/tableviewer/bin/make-conf -dir $outputDir/circos/
+		cat "${circos_file}" | parse-table -configfile $dir/circos/parse-table.conf 2>&1 | make-conf -dir $outputDir/circos/
 		sed -i -- 's%/%:%g' $outputDir/circos/cells.txt
-		$CIRCOSDIR/circos -conf $outputDir/circos/circos.conf 2>&1
+		circos -conf $outputDir/circos/circos.conf 2>&1
 		mv $outputDir/circos/circos.png $outputDir/circosDJ_${sample}.png
 		mv $outputDir/circos/circos.svg $outputDir/circosDJ_${sample}.svg
 	fi
