@@ -382,7 +382,7 @@ done
 
 echo "<tr><td colspan='2' style='background-color:#E0E0E0;'>Clonality</td></tr>" >> $outputFile
 echo "<tr><td>The dataset used to calculate clonality score (Unique based on clonaltype, $clonalType)</td><td><a href='clonalityComplete.txt'>Download</a></td></tr>" >> $outputFile
-echo "<tr><td>Sequences that are present in more than one replicate</td><td><a href='clonaltypes_replicates.txt'>Download</a></td></tr>" >> $outputFile
+# echo "<tr><td>Sequences that are present in more than one replicate</td><td><a href='clonaltypes_replicates.txt'>Download</a></td></tr>" >> $outputFile
 
 echo "</table>" >> $outputFile
 
